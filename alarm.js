@@ -1,6 +1,6 @@
 const clockNow = document.querySelector('.clock__now');
 const alarmAddButton = document.querySelector('.add__alarm_button');
-let alarmInput = document.querySelector('.add__alarm_input');
+let alarmInput = document.querySelector('#alarmsInput');
 let divAlarmAnimation;
 let tagSound;
 let date;
@@ -8,6 +8,8 @@ let hours;
 let minutes;
 let seconds;
 let onAlarm;
+let isPressBackspace = false;
+let arrayInputData = [];
 
 function actualTime() {
     date = new Date();
@@ -15,7 +17,7 @@ function actualTime() {
     minutes = date.getMinutes();
     seconds = date.getSeconds();
 
-    if(seconds < 10) {
+    if (seconds < 10) {
         seconds = '0' + seconds;
     }
     if (minutes < 10) {
@@ -27,15 +29,17 @@ function actualTime() {
     clockNow.innerHTML = `${hours}:${minutes}:${seconds}`;
 }
 
-
 function timeAlarm() {
-        tagSound = document.createElement('div');
-        divAlarmAnimation = document.createElement('div');
-        divAlarmAnimation.className = 'animation__alarm_add';
-        document.body.append(divAlarmAnimation);
-        document.body.append(tagSound);
-        tagSound.innerHTML = `<audio autoplay loop src="assets/1.mp3" class="add__alarm_sound">`;
-        setTimeout(() => {tagSound.remove(); divAlarmAnimation.remove()}, 10000);
+    tagSound = document.createElement('div');
+    divAlarmAnimation = document.createElement('div');
+    divAlarmAnimation.className = 'animation__alarm_add';
+    document.body.append(divAlarmAnimation);
+    document.body.append(tagSound);
+    tagSound.innerHTML = `<audio autoplay loop src="assets/1.mp3" class="add__alarm_sound">`;
+    setTimeout(() => {
+        tagSound.remove();
+        divAlarmAnimation.remove()
+    }, 10000);
 }
 
 alarmAddButton.onclick = function () {
@@ -48,21 +52,53 @@ alarmAddButton.onclick = function () {
     }
 }
 
-// alarmInput.addEventListener('keydown', (event) => {
-//     const value = event.target.value;
-//     event.target.value = value.replace(/\D/g,"");
-// });
-
-function change(event){
-    const value = event.value;
-    event.value = value.replace(/\D/g,"");
+const onKeyPress = function (event) {
+    isPressBackspace = event.keyCode === 8;
+    if (event.keyCode < 58 && event.keyCode > 46 || isPressBackspace) {
+        return true;
+    } else {
+        event.preventDefault();
+        return false;
+    }
 }
 
+const onInput = function (event) {
+    let isRun = true;
+    let value = event.target.value;
+    if(arrayInputData.length){
+        for (let i = 2; i < arrayInputData.length; i++) {
+            if (arrayInputData[i] === value[i]) {
+                isRun = false;
+                break;
+            }
+        }
+    }
+
+    if(isRun) {
+        arrayInputData.length = 0;
+
+    for (let i = 0; i < value.length; i++) {
+        arrayInputData.push(value[i]);
+        if (arrayInputData.length === 2 && !isPressBackspace) {
+            arrayInputData.push(':');
+        }
+
+    }
+
+    event.target.value = arrayInputData.join('');
+    event.preventDefault();
+    } else {
+        console.log('Fucking shit')
+    }
+}
+
+alarmInput.addEventListener('input', onInput);
+alarmInput.addEventListener('keydown', onKeyPress);
 
 setInterval(() => {
-    actualTime()
-    if (onAlarm === `${hours}${minutes}${seconds}`){
-        timeAlarm()
+    actualTime();
+    if (onAlarm === `${hours}${minutes}${seconds}`) {
+        timeAlarm();
     }
 }, 1000);
 
