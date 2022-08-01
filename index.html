@@ -12,14 +12,17 @@
 <header class="header">
     <h1>Alarm clock on clean Java Script</h1>
 </header>
-
-<div class="clock__now"></div>
-<div class="add__alarm">
-    <input id="alarmsInput" class="add__alarm_input" type="tel" maxlength="5">
-    <button class="add__alarm_button">Добавить будильник</button>
+<div class="clock">
+    <div class="clock__now"></div>
 </div>
 
-
+<div class="add__alarm">
+    <input id="alarmsInput" class="add__alarm_input" type="tel" maxlength="5">
+    <div class="buttons">
+        <button class="add__alarm_button">Добавить будильник</button>
+        <button class="remove__alarm_button">Удалить будильник</button>
+    </div>
+</div>
 
 
 <script src="alarm.js"></script>

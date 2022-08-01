@@ -16,15 +16,53 @@ h1 {
     margin: 0;
 }
 
+.add__alarm {
+    display: flex;
+    flex: 0 1 auto;
+    justify-content: center;
+    align-items: center;
+}
+
+.add__alarm_input{
+    height: 17px;
+}
+
+.alarm__error_hour, .alarm__error_minutes {
+    margin: 30px;
+    font-size: 40px;
+    color: #5656cc;
+}
+
+.buttons {
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+}
+
 .add__alarm_button {
+    cursor: pointer;
+    margin: 0 0 5px;
+}
+
+.remove__alarm_button {
     cursor: pointer;
 }
 
+.clock {
+    display: flex;
+    justify-content: center;
+}
 
 .clock__now{
     margin: 30px;
     font-size: 40px;
     color: red;
+}
+
+.alarm__div {
+    margin: 30px;
+    font-size: 40px;
+    color: #5656cc;
 }
 
 .animation__alarm_add {

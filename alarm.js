@@ -1,6 +1,12 @@
 const clockNow = document.querySelector('.clock__now');
 const alarmAddButton = document.querySelector('.add__alarm_button');
+const removeAddButton = document.querySelector('.remove__alarm_button');
 const alarmInput = document.querySelector('#alarmsInput');
+const alarm1Div = document.createElement('div');
+const alarmErrorHour = document.createElement('div');
+const alarmErrorMinutes = document.createElement('div');
+const addAlarm = document.querySelector('.add__alarm');
+
 
 let divAlarmAnimation;
 let tagSound;
@@ -11,8 +17,7 @@ let seconds;
 let onAlarm;
 let isPressBackspace = false;
 let arrayInputData = [];
-let numOne;
-let numTwo;
+let alarm1;
 
 function actualTime() {
     date = new Date();
@@ -42,17 +47,32 @@ function timeAlarm() {
     setTimeout(() => {
         tagSound.remove();
         divAlarmAnimation.remove()
-    }, 10000);
+    }, 15000);
 }
 
 alarmAddButton.onclick = function () {
-    if (alarmInput.value.length < 6 || isNaN(alarmInput.value)) {
-        alert('Введите значение вида час:мин:сек');
-        alarmInput.value = '';
+    alarm1Div.innerHTML = 'Будильник сработает в ' + alarm1;
+    alarm1Div.className = 'alarm__div';
+    clockNow.after(alarm1Div);
+    onAlarm = alarm1.slice(0, 2) + alarm1.slice(3,5) + '00';
+
+    if (alarmInput.value.length !== 5) {
+        addAlarm.after(alarm1Div);
+        alarm1Div.className = 'alarm__div';
+        alarm1Div.innerHTML = 'Поле ввода заполнено не полностью';
+        setTimeout(() => {
+            alarm1Div.remove();
+        },3000);
+
     } else if (alarmInput.value.length > 5) {
         onAlarm = alarmInput.value;
         alarmInput.value = '';
     }
+    alarmInput.value = '';
+}
+
+removeAddButton.onclick = () => {
+    alarm1Div.remove();
 }
 
 const onKeyPress = function (event) {
@@ -72,14 +92,34 @@ const onInput = function (event) {
     let value = event.target.value;
 
     if (value.length === 2 && value[0] + value[1] >= 24) {
-        alert('Не иожет быть больше 24');
+        alarmErrorHour.innerHTML = alarm1;
+        alarmErrorHour.className = 'alarm__error_hour';
+        addAlarm.after(alarmErrorHour);
+        alarmErrorHour.innerHTML = 'Поле часов не может быть больше 23';
+        setTimeout(() => {
+            alarmErrorHour.remove();
+        },3000);
         value = value[0];
+    } else {
+        alarmErrorHour.remove();
     }
 
     if (value.length === 5 && value[3] + value[4] >= 60) {
-        alert('Не иожет быть 60');
+        alarmErrorMinutes.innerHTML = alarm1;
+        alarmErrorMinutes.className = 'alarm__error_minutes';
+        addAlarm.after(alarmErrorMinutes);
+        alarmErrorMinutes.innerHTML = 'Поле минут не может быть больше 59';
+        setTimeout(() => {
+            alarmErrorMinutes.remove();
+        },3000);
         value = value.slice(0, 4);
         event.target.value = value;
+    } else {
+        alarmErrorMinutes.remove();
+    }
+
+    if (value.length === 5) {
+        alarm1 = event.target.value;
     }
 
     if (arrayInputData.length) {
@@ -113,6 +153,9 @@ setInterval(() => {
     actualTime();
     if (onAlarm === `${hours}${minutes}${seconds}`) {
         timeAlarm();
+        setTimeout(() => {
+            alarm1Div.remove();
+        }, 15000)
     }
 }, 1000);
 
