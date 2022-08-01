@@ -1,15 +1,14 @@
 const clockNow = document.querySelector('.clock__now');
 const alarmAddButton = document.querySelector('.add__alarm_button');
-const removeAddButton = document.querySelector('.remove__alarm_button');
 const alarmInput = document.querySelector('#alarmsInput');
 const alarm1Div = document.createElement('div');
 const alarmErrorHour = document.createElement('div');
 const alarmErrorMinutes = document.createElement('div');
 const addAlarm = document.querySelector('.add__alarm');
-
-
-let divAlarmAnimation;
-let tagSound;
+const wrapperDiv = document.createElement('div');
+const removeAddButton = document.createElement('button');
+const divAlarmAnimation = document.createElement('div');
+const tagSound = document.createElement('div');
 let date;
 let hours;
 let minutes;
@@ -18,6 +17,12 @@ let onAlarm;
 let isPressBackspace = false;
 let arrayInputData = [];
 let alarm1;
+let addButton = false;
+let access = false;
+
+wrapperDiv.className = 'wrapper__alarm_button';
+
+
 
 function actualTime() {
     date = new Date();
@@ -38,8 +43,8 @@ function actualTime() {
 }
 
 function timeAlarm() {
-    tagSound = document.createElement('div');
-    divAlarmAnimation = document.createElement('div');
+
+
     divAlarmAnimation.className = 'animation__alarm_add';
     document.body.append(divAlarmAnimation);
     document.body.append(tagSound);
@@ -51,10 +56,6 @@ function timeAlarm() {
 }
 
 alarmAddButton.onclick = function () {
-    alarm1Div.innerHTML = 'Будильник сработает в ' + alarm1;
-    alarm1Div.className = 'alarm__div';
-    clockNow.after(alarm1Div);
-    onAlarm = alarm1.slice(0, 2) + alarm1.slice(3,5) + '00';
 
     if (alarmInput.value.length !== 5) {
         addAlarm.after(alarm1Div);
@@ -62,17 +63,31 @@ alarmAddButton.onclick = function () {
         alarm1Div.innerHTML = 'Поле ввода заполнено не полностью';
         setTimeout(() => {
             alarm1Div.remove();
-        },3000);
-
-    } else if (alarmInput.value.length > 5) {
-        onAlarm = alarmInput.value;
-        alarmInput.value = '';
+        },5000);
+    } else {
+        addButton = true;
+        access = true;
+        alarm1Div.innerHTML = 'Будильник сработает в ' + alarm1.slice(0, 2) + 'час.'+ alarm1.slice(3, 5) + 'мин.';
+        alarm1Div.className = 'alarm__div';
+        addAlarm.after(alarm1Div);
+        onAlarm = alarm1.slice(0, 2) + alarm1.slice(3,5) + '00';
+    }
+    if(addButton && access) {
+        removeAddButton.className = 'remove__alarm_button';
+        removeAddButton.innerHTML = 'Remove alarm'
+        alarm1Div.prepend(removeAddButton);
+        console.log(addButton, access)
     }
     alarmInput.value = '';
+
 }
 
 removeAddButton.onclick = () => {
+    tagSound.remove();
+    divAlarmAnimation.remove()
     alarm1Div.remove();
+    removeAddButton.remove();
+    access = false;
 }
 
 const onKeyPress = function (event) {
@@ -84,7 +99,6 @@ const onKeyPress = function (event) {
         event.preventDefault();
         return false;
     }
-
 }
 
 const onInput = function (event) {

@@ -23,29 +23,42 @@ h1 {
     align-items: center;
 }
 
-.add__alarm_input{
-    height: 17px;
-}
-
 .alarm__error_hour, .alarm__error_minutes {
-    margin: 30px;
+    margin: 15px;
     font-size: 40px;
     color: #5656cc;
+}
+
+.add__alarm_input{
+    border: 1px solid black;
+    border-radius: 5px;
 }
 
 .buttons {
     margin: 5px;
     display: flex;
-    flex-direction: column;
+    flex: 0 1 150px;
 }
 
 .add__alarm_button {
+    flex: 0 0 150px;
     cursor: pointer;
-    margin: 0 0 5px;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    color: #5656cc;
 }
 
 .remove__alarm_button {
     cursor: pointer;
+    flex: 0 0 150px;
+    order: 2;
+    height: 21px;
+    margin: 5px 0 0 10px;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    color: red;
 }
 
 .clock {
@@ -54,16 +67,21 @@ h1 {
 }
 
 .clock__now{
-    margin: 30px;
+    margin: 15px;
     font-size: 40px;
     color: red;
 }
 
 .alarm__div {
-    margin: 30px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    margin: 15px;
     font-size: 40px;
     color: #5656cc;
 }
+
+
 
 .animation__alarm_add {
     text-align: center;
