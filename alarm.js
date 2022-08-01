@@ -1,10 +1,10 @@
 const clockNow = document.querySelector('.clock__now');
 const alarmAddButton = document.querySelector('.add__alarm_button');
 const alarmInput = document.querySelector('#alarmsInput');
+const addAlarm = document.querySelector('.add__alarm');
 const alarm1Div = document.createElement('div');
 const alarmErrorHour = document.createElement('div');
 const alarmErrorMinutes = document.createElement('div');
-const addAlarm = document.querySelector('.add__alarm');
 const wrapperDiv = document.createElement('div');
 const removeAddButton = document.createElement('button');
 const divAlarmAnimation = document.createElement('div');
@@ -21,8 +21,11 @@ let addButton = false;
 let access = false;
 
 wrapperDiv.className = 'wrapper__alarm_button';
-
-
+divAlarmAnimation.className = 'animation__alarm_add';
+alarm1Div.className = 'alarm__div';
+removeAddButton.className = 'remove__alarm_button';
+alarmErrorHour.className = 'alarm__error_hour';
+alarmErrorMinutes.className = 'alarm__error_minutes';
 
 function actualTime() {
     date = new Date();
@@ -43,9 +46,6 @@ function actualTime() {
 }
 
 function timeAlarm() {
-
-
-    divAlarmAnimation.className = 'animation__alarm_add';
     document.body.append(divAlarmAnimation);
     document.body.append(tagSound);
     tagSound.innerHTML = `<audio autoplay loop src="assets/1.mp3" class="add__alarm_sound">`;
@@ -56,30 +56,24 @@ function timeAlarm() {
 }
 
 alarmAddButton.onclick = function () {
-
     if (alarmInput.value.length !== 5) {
         addAlarm.after(alarm1Div);
-        alarm1Div.className = 'alarm__div';
         alarm1Div.innerHTML = 'Поле ввода заполнено не полностью';
         setTimeout(() => {
             alarm1Div.remove();
-        },5000);
+        }, 5000);
     } else {
         addButton = true;
         access = true;
-        alarm1Div.innerHTML = 'Будильник сработает в ' + alarm1.slice(0, 2) + 'час.'+ alarm1.slice(3, 5) + 'мин.';
-        alarm1Div.className = 'alarm__div';
+        alarm1Div.innerHTML = 'Будильник сработает в ' + alarm1.slice(0, 2) + 'час.' + alarm1.slice(3, 5) + 'мин.';
         addAlarm.after(alarm1Div);
-        onAlarm = alarm1.slice(0, 2) + alarm1.slice(3,5) + '00';
+        onAlarm = alarm1.slice(0, 2) + alarm1.slice(3, 5) + '00';
     }
-    if(addButton && access) {
-        removeAddButton.className = 'remove__alarm_button';
-        removeAddButton.innerHTML = 'Remove alarm'
+    if (addButton && access) {
+        removeAddButton.innerHTML = 'Remove alarm';
         alarm1Div.prepend(removeAddButton);
-        console.log(addButton, access)
     }
     alarmInput.value = '';
-
 }
 
 removeAddButton.onclick = () => {
@@ -93,7 +87,7 @@ removeAddButton.onclick = () => {
 const onKeyPress = function (event) {
     isPressBackspace = event.keyCode === 8;
 
-    if (event.keyCode < 58 && event.keyCode > 46 || isPressBackspace) {
+    if (event.keyCode < 58 && event.keyCode > 46 || isPressBackspace || event.keyCode >= 96 && event.keyCode <= 106) {
         return true;
     } else {
         event.preventDefault();
@@ -107,12 +101,11 @@ const onInput = function (event) {
 
     if (value.length === 2 && value[0] + value[1] >= 24) {
         alarmErrorHour.innerHTML = alarm1;
-        alarmErrorHour.className = 'alarm__error_hour';
         addAlarm.after(alarmErrorHour);
         alarmErrorHour.innerHTML = 'Поле часов не может быть больше 23';
         setTimeout(() => {
             alarmErrorHour.remove();
-        },3000);
+        }, 3000);
         value = value[0];
     } else {
         alarmErrorHour.remove();
@@ -120,12 +113,11 @@ const onInput = function (event) {
 
     if (value.length === 5 && value[3] + value[4] >= 60) {
         alarmErrorMinutes.innerHTML = alarm1;
-        alarmErrorMinutes.className = 'alarm__error_minutes';
         addAlarm.after(alarmErrorMinutes);
         alarmErrorMinutes.innerHTML = 'Поле минут не может быть больше 59';
         setTimeout(() => {
             alarmErrorMinutes.remove();
-        },3000);
+        }, 3000);
         value = value.slice(0, 4);
         event.target.value = value;
     } else {
